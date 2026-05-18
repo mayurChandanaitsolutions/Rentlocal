@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RentLocally — Customer Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F9F5EE;
+    --ink: #1C1A17;
+    --rust: #C8562A;
+    --rust-light: #E06B3A;
+    --sage: #6B8F71;
+    --warm-gray: #8C8278;
+    --light-gray: #EDE9E1;
+    --white: #FFFFFF;
+    --shadow: rgba(28,26,23,0.12);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+    scroll-behavior: smooth;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: 45%;
+    background: var(--ink);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 52px 48px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 340px; height: 340px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,86,42,0.22) 0%, transparent 70%);
+  }
+
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(107,143,113,0.18) 0%, transparent 70%);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .brand-icon {
+    width: 42px; height: 42px;
+    background: var(--rust);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.3px;
+  }
+
+  .brand-name span { color: var(--rust-light); }
+
+  .left-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .left-tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+  }
+
+  .left-tagline em {
+    color: var(--rust-light);
+    font-style: italic;
+  }
+
+  .left-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    max-width: 320px;
+    margin-bottom: 44px;
+  }
+
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .feature-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rust);
+    flex-shrink: 0;
+  }
+
+  .feature-text {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+    letter-spacing: 0.2px;
+  }
+
+  .left-footer {
+    position: relative;
+    z-index: 2;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* Decorative city skyline lines */
+  .skyline {
+    position: absolute;
+    bottom: 80px;
+    left: 0; right: 0;
+    height: 120px;
+    z-index: 1;
+    opacity: 0.06;
+  }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 60px;
+    padding-top: 20px;
+    overflow-y: auto;
+    height: 100vh;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* TABS */
+  .tab-bar {
+    display: flex;
+    background: var(--light-gray);
+    border-radius: 12px;
+    padding: 5px;
+    margin-bottom: 36px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 11px 0;
+    border: none;
+    background: transparent;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--warm-gray);
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .tab-btn.active {
+    background: var(--white);
+    color: var(--ink);
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  /* STEPPER */
+  .stepper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+    gap: 0;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: calc(50% + 16px);
+    right: calc(-50% + 16px);
+    height: 2px;
+    background: var(--light-gray);
+    transition: background 0.4s;
+  }
+
+  .step.done:not(:last-child)::after { background: var(--sage); }
+  .step.active:not(:last-child)::after { background: var(--light-gray); }
+
+  .step-circle {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--light-gray);
+    color: var(--warm-gray);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step.active .step-circle {
+    background: var(--rust);
+    color: var(--white);
+    box-shadow: 0 0 0 4px rgba(200,86,42,0.15);
+  }
+
+  .step.done .step-circle {
+    background: var(--sage);
+    color: var(--white);
+  }
+
+  .step-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    white-space: nowrap;
+  }
+
+  .step.active .step-label { color: var(--rust); }
+  .step.done .step-label { color: var(--sage); }
+
+  /* DOC UPLOAD SECTION */
+  .doc-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 24px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .doc-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--light-gray);
+  }
+
+  .doc-required-badge {
+    font-size: 10px;
+    background: rgba(200,86,42,0.1);
+    color: var(--rust);
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .doc-optional-badge {
+    font-size: 10px;
+    background: rgba(107,143,113,0.12);
+    color: var(--sage);
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .doc-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .doc-upload-card {
+    border: 1.5px dashed var(--light-gray);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    background: var(--white);
+  }
+
+  .doc-upload-card:hover { border-color: var(--rust); background: #fdf7f4; }
+  .doc-upload-card.uploaded { border-color: var(--sage); border-style: solid; background: rgba(107,143,113,0.05); }
+
+  .doc-upload-card input[type="file"] {
+    position: absolute; inset: 0;
+    opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+
+  .doc-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    background: var(--light-gray);
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  .doc-upload-card.uploaded .doc-icon { background: rgba(107,143,113,0.15); }
+
+  .doc-upload-card#card-profile {
+    position: relative;
+    padding-right: 68px;
+  }
+
+  .doc-upload-card#card-profile .doc-status {
+    right: 68px;
+  }
+
+  .doc-info { flex: 1; min-width: 0; }
+
+  .doc-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .doc-hint {
+    font-size: 11px;
+    color: var(--warm-gray);
+  }
+
+  .doc-status {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--warm-gray);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .doc-upload-card.uploaded .doc-status { color: var(--sage); }
+
+  .doc-notice {
+    background: rgba(200,86,42,0.07);
+    border-left: 3px solid var(--rust);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--warm-gray);
+    line-height: 1.6;
+  }
+
+  .doc-notice strong { color: var(--rust); }
+
+  /* STEP NAV BUTTONS */
+  .step-nav {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .btn-secondary {
+    flex: 1;
+    padding: 13px;
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--light-gray);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--warm-gray); background: var(--light-gray); }
+
+  /* FORM PANELS */
+  .form-panel { display: none; }
+  .form-panel.active { display: block; }
+
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+
+  .form-subtitle {
+    font-size: 14px;
+    color: var(--warm-gray);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  /* FORM FIELDS */
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .field-row {
+    display: flex;
+    gap: 14px;
+  }
+
+  .field-row .field { flex: 1; }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-wrap svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--warm-gray);
+    pointer-events: none;
+    width: 16px; height: 16px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    padding: 13px 14px 13px 42px;
+    border: 1.5px solid var(--light-gray);
+    border-radius: 10px;
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+  }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--rust);
+    box-shadow: 0 0 0 3px rgba(200,86,42,0.10);
+  }
+
+  .field input::placeholder { color: #C4BDB4; }
+
+  .show-pass {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--warm-gray);
+    padding: 2px;
+    display: flex;
+  }
+
+  .show-pass:hover { color: var(--rust); }
+
+  /* FORGOT */
+  .forgot-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -10px;
+    margin-bottom: 6px;
+  }
+
+  .forgot-link {
+    font-size: 12px;
+    color: var(--rust);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .forgot-link:hover { text-decoration: underline; }
+
+  /* REMEMBER */
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .check-row input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--rust);
+    cursor: pointer;
+  }
+
+  .check-row label {
+    font-size: 13px;
+    color: var(--warm-gray);
+    cursor: pointer;
+  }
+
+  /* SUBMIT BUTTON */
+  .btn-primary {
+    width: 100%;
+    padding: 15px;
+    background: var(--rust);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(200,86,42,0.3);
+  }
+
+  .btn-primary:hover {
+    background: var(--rust-light);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(200,86,42,0.38);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--light-gray);
+  }
+
+  .divider span { font-size: 12px; color: var(--warm-gray); white-space: nowrap; }
+
+  /* SOCIAL BUTTONS */
+  .social-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .btn-social {
+    flex: 1;
+    padding: 11px 0;
+    border: 1.5px solid var(--light-gray);
+    border-radius: 10px;
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-social:hover { border-color: var(--rust); background: #fdf7f4; }
+
+  /* TERMS */
+  .terms-text {
+    font-size: 12px;
+    color: var(--warm-gray);
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+
+  .terms-text a { color: var(--rust); text-decoration: none; font-weight: 500; }
+  .terms-text a:hover { text-decoration: underline; }
+
+  /* SUCCESS STATE */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .success-msg .check-circle {
+    width: 64px; height: 64px;
+    background: rgba(107,143,113,0.12);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 28px;
+  }
+
+  .success-msg h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .success-msg p { font-size: 14px; color: var(--warm-gray); }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-panel.active {
+    animation: fadeIn 0.3s ease;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    body { flex-direction: column; overflow: hidden; }
+    .left-panel { width: 100%; min-height: 220px; padding: 32px 28px; overflow: hidden; }
+    .left-tagline { font-size: 28px; }
+    .left-content { justify-content: flex-end; }
+    .feature-list { display: none; }
+    .right-panel { padding: 32px 24px; height: auto; overflow-y: auto; }
+    .field-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="brand">
+    <div class="brand-icon">🏠</div>
+    <div class="brand-name">Rent<span>Locally</span></div>
+  </div>
+
+  <div class="left-content">
+    <h1 class="left-tagline">Your one-stop<br><em>Local</em> rentalplace,<br>for everything.</h1>
+    <p class="left-sub">We provide a wide range of reliable and high-quality services to meet your residential and business needs. From home maintenance to advanced IT solutions, our skilled professionals ensure efficient, safe, and timely service every time.
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <span class="feature-text">Verified local service providers</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <span class="feature-text">Instant booking & scheduling</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <span class="feature-text">Secure messaging & document sharing</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <span class="feature-text">Local insights & trusted review</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative SVG skyline -->
+  <svg class="skyline" viewBox="0 0 500 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="60" width="30" height="60" fill="white"/>
+    <rect x="15" y="40" width="20" height="60" fill="white"/>
+    <rect x="50" y="70" width="25" height="50" fill="white"/>
+    <rect x="85" y="30" width="40" height="90" fill="white"/>
+    <rect x="90" y="10" width="30" height="90" fill="white"/>
+    <rect x="135" y="55" width="35" height="65" fill="white"/>
+    <rect x="180" y="40" width="20" height="80" fill="white"/>
+    <rect x="185" y="20" width="10" height="80" fill="white"/>
+    <rect x="210" y="65" width="30" height="55" fill="white"/>
+    <rect x="250" y="35" width="45" height="85" fill="white"/>
+    <rect x="255" y="15" width="35" height="85" fill="white"/>
+    <rect x="305" y="50" width="28" height="70" fill="white"/>
+    <rect x="343" y="70" width="22" height="50" fill="white"/>
+    <rect x="375" y="25" width="50" height="95" fill="white"/>
+    <rect x="380" y="5" width="40" height="95" fill="white"/>
+    <rect x="435" y="55" width="30" height="65" fill="white"/>
+    <rect x="475" y="45" width="25" height="75" fill="white"/>
+  </svg>
+
+  <div class="left-footer">© 2026 RentLocally Inc. All rights reserved.</div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="auth-card">
+
+    <!-- TABS -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="form-panel active" id="login-panel">
+      <p class="form-subtitle">Access your account to manage rentals and saved listings.</p>
+
+      <div class="field-group">
+        <div class="field">
+          <label>Email or Phone Number</label>
+          <div class="input-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+            <input type="text" id="login-email" placeholder="you@example.com or 9876543210" autocomplete="email" oninput="validateLoginInput()">
+          </div>
+          <p class="error-message" id="login-error" style="color:#f44336;font-size:12px;margin-top:6px;display:none;">Please enter a valid email or 10-digit phone number</p>
+        </div>
+      </div>
+
+      <!-- Fish Counting CAPTCHA -->
+      <div class="field" id="captcha-section" style="margin-bottom:20px;">
+        <label>Security Check</label>
+        <div style="background:var(--white); border:1.5px solid var(--light-gray); border-radius:12px; padding:16px; text-align:center;">
+          <p style="font-size:13px; color:var(--ink); margin-bottom:12px;">Count the number of fish in the image below:</p>
+          <div id="captcha-image" style="width:100%; height:150px; background:linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px; padding:10px; position:relative; overflow:hidden;">
+          </div>
+          <div style="display:flex; gap:10px; margin-top:12px; align-items:center; justify-content:center;">
+            <input type="number" id="captcha-answer" placeholder="Enter count" min="0" max="20" style="width:100px; padding:10px; border:1.5px solid var(--light-gray); border-radius:8px; font-size:14px; text-align:center;">
+            <button type="button" class="btn-secondary" style="padding:10px 16px; font-size:13px;" onclick="generateCaptcha()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Refresh
+            </button>
+          </div>
+          <p id="captcha-error" style="color:#f44336; font-size:12px; margin-top:8px; display:none;">Incorrect count. Please try again.</p>
+          <p id="captcha-success" style="color:var(--sage); font-size:12px; margin-top:8px; display:none;">✓ Verified!</p>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="send-otp-btn" onclick="if(validateCaptcha()) sendLoginOTP()" style="margin-bottom:16px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.44 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.08 6.08l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Send OTP
+      </button>
+
+      <div id="otp-section" style="display:none; margin-bottom:24px;">
+        <div style="text-align:center; margin-bottom:16px;">
+          <p style="font-size:14px; color:var(--ink); margin-bottom:8px;">Enter the 6-digit OTP sent to</p>
+          <p id="otp-sent-to" style="font-size:14px; color:var(--rust); font-weight:600;"></p>
+        </div>
+
+        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px;">
+          <input type="text" class="otp-input" maxlength="1" id="otp1" oninput="handleOTPInput(this, 1)" onkeydown="handleOTPKeydown(event, 1)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+          <input type="text" class="otp-input" maxlength="1" id="otp2" oninput="handleOTPInput(this, 2)" onkeydown="handleOTPKeydown(event, 2)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+          <input type="text" class="otp-input" maxlength="1" id="otp3" oninput="handleOTPInput(this, 3)" onkeydown="handleOTPKeydown(event, 3)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+          <input type="text" class="otp-input" maxlength="1" id="otp4" oninput="handleOTPInput(this, 4)" onkeydown="handleOTPKeydown(event, 4)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+          <input type="text" class="otp-input" maxlength="1" id="otp5" oninput="handleOTPInput(this, 5)" onkeydown="handleOTPKeydown(event, 5)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+          <input type="text" class="otp-input" maxlength="1" id="otp6" oninput="handleOTPInput(this, 6)" onkeydown="handleOTPKeydown(event, 6)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+        </div>
+
+        <p id="otp-error" style="color:#f44336; font-size:12px; text-align:center; margin-bottom:12px; display:none;">Invalid OTP. Please try again.</p>
+
+        <div style="text-align:center; margin-bottom:16px;">
+          <p id="otp-timer" style="font-size:13px; color:var(--warm-gray);"></p>
+        </div>
+
+        <button class="btn-primary" onclick="verifyLoginOTP()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Verify OTP
+        </button>
+
+        <div style="text-align:center; margin-top:12px;">
+          <a href="#" onclick="resendLoginOTP(); return false;" style="color:var(--rust); font-size:13px; text-decoration:none; font-weight:500;">Resend OTP</a>
+        </div>
+      </div>
+
+      <div class="check-row" style="margin-bottom:24px; margin-top:14px;">
+        <input type="checkbox" id="remember">
+        <label for="remember">Keep me signed in</label>
+      </div>
+
+      <p class="terms-text">
+        By signing in, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+      </p>
+    </div>
+
+    <!-- REGISTER FORM — multi-step -->
+    <div class="form-panel" id="register-panel">
+
+      <!-- STEP 1: Account Details -->
+      <div id="reg-step-1">
+        <h2 class="form-title">Create account</h2>
+        <p class="form-subtitle">Step 1 of 3 — Your basic details.</p>
+
+        <!-- Stepper -->
+        <div class="stepper">
+          <div class="step active" id="s1"><div class="step-circle">1</div><div class="step-label">Account</div></div>
+          <div class="step" id="s2"><div class="step-circle">2</div><div class="step-label">Documents</div></div>
+          <div class="step" id="s3"><div class="step-circle">3</div><div class="step-label">Review</div></div>
+        </div>
+
+        <div class="field-group">
+<div class="field">
+  <label>Profile Photo</label>
+  <div class="doc-upload-card" id="card-profile">
+    <input type="file" id="profile-input" accept="image/jpeg,image/png,image/jpg" onchange="markUploaded('card-profile','status-profile',this); previewProfilePhoto(this);">
+    <div class="doc-icon">👤</div>
+    <div class="doc-info">
+      <div class="doc-name">Profile Photo</div>
+      <div class="doc-hint">Recent photo · Max 2MB · JPG/PNG</div>
+    </div>
+    <div class="doc-status" id="status-profile">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      Upload
+    </div>
+    <div id="profile-preview" class="profile-preview" style="position:absolute;top:8px;right:8px;width:48px;height:48px;border-radius:50%;background:var(--light-gray);overflow:hidden;display:none;border:2px solid var(--white);box-shadow:0 2px 8px var(--shadow);">
+    </div>
+  </div>
+</div>
+          <div class="field-row">
+            <div class="field">
+              <label>First Name</label>
+              <div class="input-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" id="r-fname" placeholder="Aarav" autocomplete="given-name">
+              </div>
+            </div>
+            <div class="field">
+              <label>Last Name</label>
+              <div class="input-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" id="r-lname" placeholder="Sharma" autocomplete="family-name">
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Email Address</label>
+            <div class="input-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+              <input type="email" id="r-email" placeholder="you@example.com" autocomplete="email" oninput="validateRegisterEmail()">
+            </div>
+            <p class="error-message" id="r-email-error" style="color:#f44336;font-size:12px;margin-top:6px;display:none;">Please enter a valid email address</p>
+            <button type="button" class="btn-secondary" style="margin-top:8px; padding:10px 16px; font-size:13px;" onclick="sendEmailOTP()" id="send-email-otp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+              Send Email OTP
+            </button>
+          </div>
+          <div class="field">
+            <label>Phone Number</label>
+            <div class="input-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.44 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.08 6.08l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <input type="tel" id="r-phone" placeholder="+91 98765 43210" autocomplete="tel" oninput="validateRegisterPhone()">
+            </div>
+            <p class="error-message" id="r-phone-error" style="color:#f44336;font-size:12px;margin-top:6px;display:none;">Please enter a valid 10-digit phone number</p>
+            <button type="button" class="btn-secondary" style="margin-top:8px; padding:10px 16px; font-size:13px;" onclick="sendPhoneOTP()" id="send-phone-otp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.44 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.08 6.08l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              Send Phone OTP
+            </button>
+          </div>
+          
+          <!-- Email OTP Verification -->
+          <div class="field" id="email-otp-section" style="display:none;">
+            <label>Email Verification</label>
+            <div style="display:flex; gap:8px; margin-bottom:10px; justify-content:space-between;">
+              <input type="text" class="otp-input" maxlength="1" id="email-otp1" inputmode="numeric" pattern="[0-9]*" oninput="handleEmailOTPInput(this, 1)" onkeydown="handleEmailOTPKeydown(event, 1)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="text" class="otp-input" maxlength="1" id="email-otp2" inputmode="numeric" pattern="[0-9]*" oninput="handleEmailOTPInput(this, 2)" onkeydown="handleEmailOTPKeydown(event, 2)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="text" class="otp-input" maxlength="1" id="email-otp3" inputmode="numeric" pattern="[0-9]*" oninput="handleEmailOTPInput(this, 3)" onkeydown="handleEmailOTPKeydown(event, 3)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="text" class="otp-input" maxlength="1" id="email-otp4" inputmode="numeric" pattern="[0-9]*" oninput="handleEmailOTPInput(this, 4)" onkeydown="handleEmailOTPKeydown(event, 4)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="text" class="otp-input" maxlength="1" id="email-otp5" inputmode="numeric" pattern="[0-9]*" oninput="handleEmailOTPInput(this, 5)" onkeydown="handleEmailOTPKeydown(event, 5)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="text" class="otp-input" maxlength="1" id="email-otp6" inputmode="numeric" pattern="[0-9]*" oninput="handleEmailOTPInput(this, 6)" onkeydown="handleEmailOTPKeydown(event, 6)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+            </div>
+            <p id="email-otp-error" style="color:#f44336; font-size:12px; margin-bottom:8px; display:none;">Invalid OTP. Please try again.</p>
+            <p id="email-otp-timer" style="font-size:12px; color:var(--warm-gray); margin-bottom:8px;"></p>
+            <div style="display:flex; gap:10px;">
+              <button type="button" class="btn-secondary" style="flex:1; padding:10px;" onclick="verifyEmailOTP()">Verify Email OTP</button>
+              <a href="#" onclick="resendEmailOTP(); return false;" style="color:var(--rust); font-size:12px; text-decoration:none; font-weight:500; padding:10px;">Resend</a>
+            </div>
+          </div>
+          
+          <!-- Phone OTP Verification -->
+          <div class="field" id="phone-otp-section" style="display:none;">
+            <label>Phone Verification</label>
+            <div style="display:flex; gap:8px; margin-bottom:10px; justify-content:space-between;">
+              <input type="text" class="otp-input" maxlength="1" id="phone-otp1" inputmode="numeric" pattern="[0-9]*" oninput="handlePhoneOTPInput(this, 1)" onkeydown="handlePhoneOTPKeydown(event, 1)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="text" class="otp-input" maxlength="1" id="phone-otp2" inputmode="numeric" pattern="[0-9]*" oninput="handlePhoneOTPInput(this, 2)" onkeydown="handlePhoneOTPKeydown(event, 2)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="text" class="otp-input" maxlength="1" id="phone-otp3" inputmode="numeric" pattern="[0-9]*" oninput="handlePhoneOTPInput(this, 3)" onkeydown="handlePhoneOTPKeydown(event, 3)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="text" class="otp-input" maxlength="1" id="phone-otp4" inputmode="numeric" pattern="[0-9]*" oninput="handlePhoneOTPInput(this, 4)" onkeydown="handlePhoneOTPKeydown(event, 4)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="text" class="otp-input" maxlength="1" id="phone-otp5" inputmode="numeric" pattern="[0-9]*" oninput="handlePhoneOTPInput(this, 5)" onkeydown="handlePhoneOTPKeydown(event, 5)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="text" class="otp-input" maxlength="1" id="phone-otp6" inputmode="numeric" pattern="[0-9]*" oninput="handlePhoneOTPInput(this, 6)" onkeydown="handlePhoneOTPKeydown(event, 6)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+            </div>
+            <p id="phone-otp-error" style="color:#f44336; font-size:12px; margin-bottom:8px; display:none;">Invalid OTP. Please try again.</p>
+            <p id="phone-otp-timer" style="font-size:12px; color:var(--warm-gray); margin-bottom:8px;"></p>
+            <div style="display:flex; gap:10px;">
+              <button type="button" class="btn-secondary" style="flex:1; padding:10px;" onclick="verifyPhoneOTP()">Verify Phone OTP</button>
+              <a href="#" onclick="resendPhoneOTP(); return false;" style="color:var(--rust); font-size:12px; text-decoration:none; font-weight:500; padding:10px;">Resend</a>
+            </div>
+          </div>
+          
+          <!-- Live GPS Location -->
+          <div class="field" id="live-gps-section">
+            <label style="font-size:12px;">📍 Live Location <span id="gps-status" style="font-size:11px;color:var(--warm-gray);">Detecting...</span></label>
+            <div style="background:var(--white);border:1.5px solid var(--light-gray);border-radius:12px;padding:16px;position:relative;">
+              <div id="gps-loading" style="display:flex;align-items:center;gap:8px;color:var(--sage);font-size:13px;">
+                <div style="width:16px;height:16px;border:2px solid var(--light-gray);border-top:2px solid var(--sage);border-radius:50%;animation:spin 1s linear infinite;"></div>
+                Getting your current location...
+              </div>
+              <div id="gps-display" style="display:none;">
+                <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:6px;" id="gps-address"></div>
+                <div style="font-size:12px;color:var(--warm-gray);font-family:monospace;letter-spacing:0.3px;" id="gps-coords"></div>
+                <div id="gps-updated" style="font-size:11px;color:var(--sage);margin-top:8px;">Updated just now</div>
+              </div>
+              <div id="gps-error" style="display:none;color:#f44336;font-size:12px;padding:8px 0;"></div>
+            </div>
+          </div>
+          
+          <div class="field">
+            <label>Permanent Address</label>
+            <div class="field-row" style="margin-bottom:10px;">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">House/Flat No.</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-house" placeholder="123, ABC Apartments">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">Area/Locality</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-area" placeholder="Koramangala">
+                </div>
+              </div>
+            </div>
+            <div class="field-row" style="margin-bottom:10px;">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">City</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-city" placeholder="Bengaluru">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">District</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-district" placeholder="Bengaluru Urban">
+                </div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">State</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-state" placeholder="Karnataka">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">Pincode</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-pincode" placeholder="560034" maxlength="6">
+                </div>
+              </div>
+            </div>
+            </div>
+            
+            <!-- Country Selection -->
+            <div class="field">
+              <label>Country</label>
+              <div class="input-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 21v-8m0 0V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6m-11 3v4m0 0h6m-6 0h6"/>
+                </svg>
+                <select id="r-country" onchange="toggleCountryPassport();">
+
+                  <option value="India">India 🇮🇳</option>
+                  <option value="USA">United States 🇺🇸</option>
+                  <option value="United Kingdom">United Kingdom 🇬🇧</option>
+                  <option value="Canada">Canada 🇨🇦</option>
+                  <option value="Australia">Australia 🇦🇺</option>
+                  <option value="UAE">UAE 🇦🇪</option>
+                  <option value="Singapore">Singapore 🇸🇬</option>
+                  <option value="Germany">Germany 🇩🇪</option>
+                  <option value="France">France 🇫🇷</option>
+                  <option value="Netherlands">Netherlands 🇳🇱</option>
+                  <optgroup label="Others">
+                    <option value="Other">Other Countries</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+            
+            <div class="field">
+              <label>Temporary Address</label>
+            <div class="field-row" style="margin-bottom:10px;">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">House/Flat No.</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-house" placeholder="456, XYZ Residency">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">Area/Locality</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-area" placeholder="Indiranagar">
+                </div>
+              </div>
+            </div>
+            <div class="field-row" style="margin-bottom:10px;">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">City</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-city" placeholder="Bengaluru">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">District</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-district" placeholder="Bengaluru Urban">
+                </div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">State</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-state" placeholder="Karnataka">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">Pincode</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-pincode" placeholder="560038" maxlength="6">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="if(validateStep1()) goStep(2)" style="margin-top:8px;">
+          Continue to Documents
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+      <!-- STEP 2: Document Upload -->
+      <div id="reg-step-2" style="display:none;">
+        <h2 class="form-title">Secure your rental</h2>
+        <p class="form-subtitle">Upload key documents to build trust with landlords. You can skip optional ones later.</p>
+
+        <div class="stepper">
+          <div class="step done"><div class="step-circle">✓</div><div class="step-label">Account</div></div>
+          <div class="step active"><div class="step-circle">2</div><div class="step-label">Documents</div></div>
+          <div class="step"><div class="step-circle">3</div><div class="step-label">Done</div></div>
+        </div>
+
+        <!-- Scrollable doc area -->
+<div style="max-height:65vh;overflow-y:auto;padding-right:12px;scrollbar-width:thin;scrollbar-color:var(--warm-gray) transparent;scroll-behavior:smooth;">
+
+          <!-- Identity -->
+          <div class="doc-section-title">Identity Proof <span class="doc-required-badge">Required</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-aadhaar">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-aadhaar','status-aadhaar',this)">
+              <div class="doc-icon">🪪</div>
+              <div class="doc-info"><div class="doc-name">Aadhaar Card</div><div class="doc-hint">Front & back · PDF or image · Max 5MB</div></div>
+              <div class="doc-status" id="status-aadhaar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-pan">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-pan','status-pan',this)">
+              <div class="doc-icon">💳</div>
+              <div class="doc-info"><div class="doc-name">PAN Card</div><div class="doc-hint">Clear scan · PDF or image · Max 5MB</div></div>
+              <div class="doc-status" id="status-pan"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div id="passport-container" style="display: none;">
+              <div class="doc-upload-card" id="card-passport">
+                <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-passport','status-passport',this); checkPassportRequired()">
+                <div class="doc-icon">📘</div>
+                <div class="doc-info">
+                  <div class="doc-name">Passport / NRI ID <span id="passport-badge" class="doc-required-badge" style="display: inline-block; margin-left: 6px;">Required</span></div>
+                  <div class="doc-hint">Required for non-Indian citizens & NRIs · First & last page</div>
+                </div>
+                <div class="doc-status" id="status-passport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="doc-section-title">Address Proof <span class="doc-required-badge">Required · Any 1</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-utility">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-utility','status-utility',this)">
+              <div class="doc-icon">🧾</div>
+              <div class="doc-info"><div class="doc-name">Utility Bill</div><div class="doc-hint">Electricity / Gas / Water — last 3 months</div></div>
+              <div class="doc-status" id="status-utility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-voterид">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-voterid','status-voterid',this)">
+              <div class="doc-icon">🗳️</div>
+              <div class="doc-info"><div class="doc-name">Voter ID</div><div class="doc-hint">Front & back · Government issued</div></div>
+              <div class="doc-status" id="status-voterid"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+          </div>
+
+          <!-- Employment -->
+          <div class="doc-section-title">Employment <span class="doc-optional-badge">Optional</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-empid">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-empid','status-empid',this)">
+              <div class="doc-icon">🏢</div>
+              <div class="doc-info"><div class="doc-name">Employee ID / Offer Letter</div><div class="doc-hint">Confirms current employer & stability</div></div>
+              <div class="doc-status" id="status-empid"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+          </div>
+
+          <!-- Financial -->
+          <div class="doc-section-title">Financial Proof <span class="doc-required-badge">Required · Any 1</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-salary">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-salary','status-salary',this)">
+              <div class="doc-icon">💼</div>
+              <div class="doc-info"><div class="doc-name">Salary Slips</div><div class="doc-hint">Last 3 months · PDF preferred</div></div>
+              <div class="doc-status" id="status-salary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-bank">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-bank','status-bank',this)">
+              <div class="doc-icon">🏦</div>
+              <div class="doc-info"><div class="doc-name">Bank Statement</div><div class="doc-hint">Last 6 months · Shows financial stability</div></div>
+              <div class="doc-status" id="status-bank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-itr">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-itr','status-itr',this)">
+              <div class="doc-icon">📄</div>
+              <div class="doc-info"><div class="doc-name">ITR / Form 16</div><div class="doc-hint">Latest filing · For self-employed tenants</div></div>
+              <div class="doc-status" id="status-itr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+          </div>
+
+          <!-- Employment -->
+          <div class="doc-section-title">Employment <span class="doc-optional-badge">Optional</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-empid">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-empid','status-empid',this)">
+              <div class="doc-icon">🏢</div>
+              <div class="doc-info"><div class="doc-name">Employee ID / Offer Letter</div><div class="doc-hint">Confirms current employer & stability</div></div>
+              <div class="doc-status" id="status-empid"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+          </div>
+
+          <!-- Legal & References -->
+          <div class="doc-section-title">Legal & References <span class="doc-optional-badge">Optional</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-police">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-police','status-police',this)">
+              <div class="doc-icon">🚔</div>
+              <div class="doc-info"><div class="doc-name">Police Verification Form</div><div class="doc-hint">Required by law in many states</div></div>
+              <div class="doc-status" id="status-police"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-noc">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-noc','status-noc',this)">
+              <div class="doc-icon">📃</div>
+              <div class="doc-info"><div class="doc-name">Previous Landlord NOC</div><div class="doc-hint">Confirms good rental history</div></div>
+              <div class="doc-status" id="status-noc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-agreement">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-agreement','status-agreement',this)">
+              <div class="doc-icon">📝</div>
+              <div class="doc-info"><div class="doc-name">Signed Rent Agreement</div><div class="doc-hint">Previous tenancy · Notarised copy preferred</div></div>
+              <div class="doc-status" id="status-agreement"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+          </div>
+
+        </div><!-- end scrollable -->
+          <!-- Photo & Emergency -->
+          <div class="doc-section-title">Photo & Emergency Contact <span class="doc-optional-badge">Optional</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-photo">
+              <input type="file" accept=".jpg,.jpeg,.png" onchange="markUploaded('card-photo','status-photo',this)">
+              <div class="doc-icon">🖼️</div>
+              <div class="doc-info"><div class="doc-name">Passport Size Photo</div><div class="doc-hint">Recent · White background · JPG or PNG</div></div>
+              <div class="doc-status" id="status-photo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-deposit">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-deposit','status-deposit',this)">
+              <div class="doc-icon">🧾</div>
+              <div class="doc-info"><div class="doc-name">Security Deposit Receipt</div><div class="doc-hint">Signed acknowledgement of advance paid</div></div>
+              <div class="doc-status" id="status-deposit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+          </div>
+
+        </div><!-- end scrollable -->
+
+        <div class="doc-notice" style="margin-top:14px;">
+          🔒 <strong>Your documents are safe.</strong> AES-256 encrypted. Shared with landlords only after your approval. Compliant with India's DPDP Act 2023.
+        </div>
+
+        <div class="step-nav" style="margin-top:16px;">
+          <button class="btn-secondary" onclick="goStep(1)">← Back</button>
+          <button class="btn-primary" style="flex:2;" onclick="if(validateStep2()) goStep(3);">
+            Review & Submit
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+        <p style="text-align:center;margin-top:12px;"><a href="#" onclick="goStep(3);return false;" style="font-size:13px;color:var(--warm-gray);text-decoration:underline;">Skip for now — upload after signup</a></p>
+      </div>
+
+      <!-- STEP 3: Review & Confirm -->
+      <div id="reg-step-3" style="display:none;">
+        <h2 class="form-title">Almost there!</h2>
+        <p class="form-subtitle">Step 3 of 3 — Review your submission.</p>
+
+        <div class="stepper">
+          <div class="step done"><div class="step-circle">✓</div><div class="step-label">Account</div></div>
+          <div class="step done"><div class="step-circle">✓</div><div class="step-label">Documents</div></div>
+          <div class="step active"><div class="step-circle">3</div><div class="step-label">Review</div></div>
+        </div>
+
+        <!-- Summary -->
+        <div style="background:var(--white);border-radius:12px;border:1.5px solid var(--light-gray);padding:18px 20px;margin-bottom:20px;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:14px;">Account Summary</div>
+          <div style="font-size:14px;color:var(--ink);display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--warm-gray);">Name</span><span id="review-name" style="font-weight:500;">—</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--warm-gray);">Email</span><span id="review-email" style="font-weight:500;">—</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--warm-gray);">Phone</span><span id="review-phone" style="font-weight:500;">—</span></div>
+          </div>
+        </div>
+
+        <div style="background:var(--white);border-radius:12px;border:1.5px solid var(--light-gray);padding:18px 20px;margin-bottom:20px;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:14px;">Documents Uploaded</div>
+          <div id="review-docs" style="font-size:13px;color:var(--ink);display:flex;flex-direction:column;gap:7px;"></div>
+        </div>
+
+        <div class="check-row" style="margin-bottom:20px;">
+          <input type="checkbox" id="agree-terms">
+          <label for="agree-terms">I agree to the <a href="#" style="color:var(--rust);font-weight:500;">Terms</a>, <a href="#" style="color:var(--rust);font-weight:500;">Privacy Policy</a> &amp; document sharing consent</label>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn-secondary" onclick="goStep(2)">← Back</button>
+          <button class="btn-primary" style="flex:2;" onclick="handleRegister()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Create My Account
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Tab switching
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach((t, i) => {
+      t.classList.toggle('active', (i === 0 ? 'login' : 'register') === tab);
+    });
+    document.querySelectorAll('.form-panel').forEach(p => {
+      p.classList.toggle('active', p.id === tab + '-panel');
+    });
+    if (tab === 'register') goStep(1);
+  }
+
+  // Initialize CAPTCHA on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    generateCaptcha();
+  });
+
+  // Country-based Passport toggle
+  let selectedCountry = 'India';
+  
+  function toggleCountryPassport() {
+    const countrySelect = document.getElementById('r-country');
+    const passportContainer = document.getElementById('passport-container');
+    const passportBadge = document.getElementById('passport-badge');
+    const isIndia = countrySelect.value === 'India';
+    
+    selectedCountry = countrySelect.value;
+    
+    if (isIndia) {
+      passportContainer.style.display = 'none';
+      passportContainer.classList.remove('passport-visible');
+      if (passportBadge) passportBadge.textContent = 'Optional';
+    } else {
+      passportContainer.style.display = 'block';
+      passportContainer.classList.add('passport-visible');
+      if (passportBadge) passportBadge.textContent = 'Required';
+    }
+    
+    // Reset upload status when hiding
+    if (isIndia) {
+      document.getElementById('status-passport').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload';
+      document.getElementById('card-passport').classList.remove('uploaded');
+      delete uploadedDocs['card-passport'];
+    }
+  }
+  
+  function checkPassportRequired() {
+    if (selectedCountry !== 'India' && document.getElementById('card-passport').classList.contains('uploaded')) {
+      // Mark as satisfied
+      document.getElementById('status-passport').style.color = 'var(--sage)';
+    }
+  }
+
+  // Step 2 validation - passport required for non-India
+  function validateStep2() {
+    if (selectedCountry !== 'India') {
+      const passportUploaded = document.getElementById('card-passport').classList.contains('uploaded');
+      if (!passportUploaded) {
+        alert('Passport or NRI ID upload is required for non-Indian citizens & NRIs. Please upload.');
+        document.getElementById('passport-container').scrollIntoView({ behavior: 'smooth' });
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Smooth transition for passport container
+  const style = document.createElement('style');
+  style.textContent = `
+    #passport-container {
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    #passport-container.passport-visible {
+      opacity: 1;
+      max-height: 200px;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Multi-step registration
+  function goStep(n) {
+    if (n !== 1) stopLiveGPS();
+    document.getElementById('reg-step-1').style.display = n === 1 ? '' : 'none';
+    document.getElementById('reg-step-2').style.display = n === 2 ? '' : 'none';
+    document.getElementById('reg-step-3').style.display = n === 3 ? '' : 'none';
+    if (n === 1) initLiveGPS();
+    if (n === 2) toggleCountryPassport();  // Auto-toggle passport on step 2
+    if (n === 3) populateReview();
+  }
+
+  // Live GPS Location
+  let gpsWatchId = null;
+
+  function initLiveGPS() {
+    const gpsSection = document.getElementById('live-gps-section');
+    if (!gpsSection) return;
+    
+    // Show loading
+    document.getElementById('gps-loading').style.display = 'flex';
+    document.getElementById('gps-display').style.display = 'none';
+    document.getElementById('gps-error').style.display = 'none';
+    
+    if (!navigator.geolocation) {
+      handleGPSError({code: 2, message: 'Geolocation not supported'});
+      return;
+    }
+    
+    // Get initial position
+    navigator.geolocation.getCurrentPosition(
+      handleGPSPosition,
+      handleGPSError,
+      { enableHighAccuracy: true, maximumAge: 5 * 60 * 1000 } // 5min cache
+    );
+    
+    // Watch for live updates (no timeout)
+    gpsWatchId = navigator.geolocation.watchPosition(
+      handleGPSPosition,
+      (error) => { /* Silent fail for watch - keep last location */ },
+      { enableHighAccuracy: true, maximumAge: 30 * 1000 } // 30s cache
+    );
+  }
+
+  function handleGPSPosition(position) {
+    const { latitude, longitude } = position.coords;
+    
+    // Update coords display
+    document.getElementById('gps-coords').textContent = 
+      `Lat: ${latitude.toFixed(6)}, Lng: ${longitude.toFixed(6)}`;
+    
+    // Reverse geocode
+    reverseGeocode(latitude, longitude);
+    
+    // Update timestamp
+    const now = new Date();
+    document.getElementById('gps-updated').textContent = 
+      `Updated ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+    
+    // Show display, hide loading
+    document.getElementById('gps-loading').style.display = 'none';
+    document.getElementById('gps-display').style.display = 'block';
+    document.getElementById('gps-error').style.display = 'none';
+  }
+
+  function reverseGeocode(lat, lng) {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+    
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.display_name) {
+          document.getElementById('gps-address').textContent = data.display_name;
+        } else {
+          document.getElementById('gps-address').textContent = 'Address unavailable';
+        }
+      })
+      .catch(() => {
+        document.getElementById('gps-address').textContent = 'Reverse geocoding failed';
+      });
+  }
+
+  function handleGPSError(error) {
+    document.getElementById('gps-loading').style.display = 'none';
+    const errorEl = document.getElementById('gps-error');
+    errorEl.style.display = 'block';
+    
+    if (error.code === error.PERMISSION_DENIED) {
+      errorEl.textContent = 'Location access denied';
+    } else {
+      // Hide non-critical errors, keep last known location visible
+      errorEl.style.display = 'none';
+    }
+  }
+
+  // Cleanup on step change
+  function stopLiveGPS() {
+    if (gpsWatchId) {
+      navigator.geolocation.clearWatch(gpsWatchId);
+      gpsWatchId = null;
+    }
+  }
+
+  // Document upload state
+  const uploadedDocs = {};
+
+  function markUploaded(cardId, statusId, input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const card = document.getElementById(cardId);
+    const status = document.getElementById(statusId);
+    card.classList.add('uploaded');
+    status.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ${file.name.length > 14 ? file.name.substring(0,12)+'…' : file.name}`;
+    uploadedDocs[cardId] = file.name;
+  }
+
+  function previewProfilePhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Profile photo must be less than 2MB');
+      input.value = '';
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('profile-preview');
+      preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Review step
+  const docLabels = {
+    'card-aadhaar':   '🪪 Aadhaar Card',
+    'card-pan':       '💳 PAN Card',
+    'card-passport':  '📘 Passport',
+    'card-utility':   '🧾 Utility Bill',
+    'card-voterid':   '🗳️ Voter ID',
+    'card-salary':    '💼 Salary Slips',
+    'card-bank':      '🏦 Bank Statement',
+    'card-itr':       '📄 ITR / Form 16',
+    'card-empid':     '🏢 Employee ID / Offer Letter',
+    'card-police':    '🚔 Police Verification Form',
+    'card-noc':       '📃 Previous Landlord NOC',
+    'card-agreement': '📝 Signed Rent Agreement',
+    
+  };
+
+  function populateReview() {
+    const fname = document.getElementById('r-fname')?.value || '—';
+    const lname = document.getElementById('r-lname')?.value || '—';
+    const email = document.getElementById('r-email')?.value || '—';
+    const phone = document.getElementById('r-phone')?.value || '—';
+    document.getElementById('review-name').textContent = `${fname} ${lname}`.trim() || '—';
+    document.getElementById('review-email').textContent = email;
+    document.getElementById('review-phone').textContent = phone;
+
+    const docsEl = document.getElementById('review-docs');
+    const keys = Object.keys(uploadedDocs);
+    if (keys.length === 0) {
+      docsEl.innerHTML = `<span style="color:var(--warm-gray);font-size:13px;">No documents uploaded yet.</span>`;
+    } else {
+      docsEl.innerHTML = keys.map(k =>
+        `<div style="display:flex;justify-content:space-between;align-items:center;">
+          <span>${docLabels[k] || k}</span>
+          <span style="color:var(--sage);font-size:12px;font-weight:600;">✓ Uploaded</span>
+        </div>`
+      ).join('');
+    }
+  }
+
+  // Password toggle
+  function togglePass(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const isPass = input.type === 'password';
+    input.type = isPass ? 'text' : 'password';
+    btn.innerHTML = isPass
+      ? `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+      : `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  }
+
+  // Validation functions
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  function isValidPhone(phone) {
+    const phoneRegex = /^[6-9]\d{9}$/;
+    return phoneRegex.test(phone.replace(/\D/g, ''));
+  }
+
+  function validateLoginInput() {
+    const input = document.getElementById('login-email');
+    const error = document.getElementById('login-error');
+    const value = input.value.trim();
+    
+    if (value === '') {
+      error.style.display = 'none';
+      input.style.borderColor = '';
+      return false;
+    }
+    
+    const isValid = isValidEmail(value) || isValidPhone(value);
+    
+    if (isValid) {
+      error.style.display = 'none';
+      input.style.borderColor = 'var(--sage)';
+      return true;
+    } else {
+      error.style.display = 'block';
+      input.style.borderColor = 'var(--rust)';
+      return false;
+    }
+  }
+
+  // Register email validation
+  function validateRegisterEmail() {
+    const input = document.getElementById('r-email');
+    const error = document.getElementById('r-email-error');
+    const value = input.value.trim();
+    
+    if (value === '') {
+      error.style.display = 'none';
+      input.style.borderColor = '';
+      return false;
+    }
+    
+    if (isValidEmail(value)) {
+      error.style.display = 'none';
+      input.style.borderColor = 'var(--sage)';
+      return true;
+    } else {
+      error.style.display = 'block';
+      input.style.borderColor = 'var(--rust)';
+      return false;
+    }
+  }
+
+  // Register phone validation
+  function validateRegisterPhone() {
+    const input = document.getElementById('r-phone');
+    const error = document.getElementById('r-phone-error');
+    const value = input.value.trim();
+    
+    if (value === '') {
+      error.style.display = 'none';
+      input.style.borderColor = '';
+      return false;
+    }
+    
+    if (isValidPhone(value)) {
+      error.style.display = 'none';
+      input.style.borderColor = 'var(--sage)';
+      return true;
+    } else {
+      error.style.display = 'block';
+      input.style.borderColor = 'var(--rust)';
+      return false;
+    }
+  }
+
+  // Validate all fields in step 1
+  function validateStep1() {
+    const emailValid = validateRegisterEmail();
+    const phoneValid = validateRegisterPhone();
+    
+    // Check if fields are empty
+    const email = document.getElementById('r-email').value.trim();
+    const phone = document.getElementById('r-phone').value.trim();
+    
+    if (!email) {
+      const error = document.getElementById('r-email-error');
+      error.textContent = 'Email address is required';
+      error.style.display = 'block';
+      document.getElementById('r-email').style.borderColor = 'var(--rust)';
+    }
+    
+    if (!phone) {
+      const error = document.getElementById('r-phone-error');
+      error.textContent = 'Phone number is required';
+      error.style.display = 'block';
+      document.getElementById('r-phone').style.borderColor = 'var(--rust)';
+    }
+    
+    return emailValid && phoneValid && email && phone;
+  }
+
+  // OTP variables for registration
+  let emailOTP = '';
+  let phoneOTP = '';
+  let emailOTPTimerInterval;
+  let phoneOTPTimerInterval;
+  let emailOTPTimeLeft = 60;
+  let phoneOTPTimeLeft = 60;
+  let emailVerified = false;
+  let phoneVerified = false;
+
+  // Send OTP for email verification
+  function sendEmailOTP() {
+    const email = document.getElementById('r-email').value.trim();
+    const error = document.getElementById('r-email-error');
+    
+    if (!email) {
+      error.textContent = 'Email address is required';
+      error.style.display = 'block';
+      document.getElementById('r-email').style.borderColor = 'var(--rust)';
+      return;
+    }
+    
+    if (!isValidEmail(email)) {
+      error.textContent = 'Please enter a valid email address';
+      error.style.display = 'block';
+      document.getElementById('r-email').style.borderColor = 'var(--rust)';
+      return;
+    }
+    
+    error.style.display = 'none';
+    
+    // Generate 6-digit OTP
+    emailOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // In production, send via Email API
+    console.log('Email OTP:', emailOTP);
+    alert(`Your Email OTP is: ${emailOTP}\n\n(In production, this would be sent via Email)`);
+    
+    // Show OTP section
+    document.getElementById('email-otp-section').style.display = 'block';
+    
+    // Start timer
+    startEmailOTPTimer();
+    
+    // Focus first OTP input
+    document.getElementById('email-otp1').focus();
+  }
+
+  // Send OTP for phone verification
+  function sendPhoneOTP() {
+    const phone = document.getElementById('r-phone').value.trim();
+    const error = document.getElementById('r-phone-error');
+    
+    if (!phone) {
+      error.textContent = 'Phone number is required';
+      error.style.display = 'block';
+      document.getElementById('r-phone').style.borderColor = 'var(--rust)';
+      return;
+    }
+    
+    if (!isValidPhone(phone)) {
+      error.textContent = 'Please enter a valid 10-digit phone number';
+      error.style.display = 'block';
+      document.getElementById('r-phone').style.borderColor = 'var(--rust)';
+      return;
+    }
+    
+    error.style.display = 'none';
+    
+    // Generate 6-digit OTP
+    phoneOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // In production, send via SMS API
+    console.log('Phone OTP:', phoneOTP);
+    alert(`Your Phone OTP is: ${phoneOTP}\n\n(In production, this would be sent via SMS)`);
+    
+    // Show OTP section
+    document.getElementById('phone-otp-section').style.display = 'block';
+    
+    // Start timer
+    startPhoneOTPTimer();
+    
+    // Focus first OTP input
+    document.getElementById('phone-otp1').focus();
+  }
+
+  // Handle email OTP input
+  function handleEmailOTPInput(input, position) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+    
+    if (input.value.length === 1 && position < 6) {
+      document.getElementById('email-otp' + (position + 1)).focus();
+    }
+    
+    checkEmailOTPComplete();
+  }
+
+  // Handle email OTP keydown
+  function handleEmailOTPKeydown(event, position) {
+    if (event.key === 'Backspace' && position > 1) {
+      const currentInput = document.getElementById('email-otp' + position);
+      if (currentInput.value === '') {
+        document.getElementById('email-otp' + (position - 1)).focus();
+      }
+    }
+  }
+
+  // Handle phone OTP input
+  function handlePhoneOTPInput(input, position) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+    
+    if (input.value.length === 1 && position < 6) {
+      document.getElementById('phone-otp' + (position + 1)).focus();
+    }
+    
+    checkPhoneOTPComplete();
+  }
+
+  // Handle phone OTP keydown
+  function handlePhoneOTPKeydown(event, position) {
+    if (event.key === 'Backspace' && position > 1) {
+      const currentInput = document.getElementById('phone-otp' + position);
+      if (currentInput.value === '') {
+        document.getElementById('phone-otp' + (position - 1)).focus();
+      }
+    }
+  }
+
+  // Check if email OTP is complete
+  function checkEmailOTPComplete() {
+    let otp = '';
+    for (let i = 1; i <= 6; i++) {
+      otp += document.getElementById('email-otp' + i).value;
+    }
+    
+    if (otp.length === 6) {
+      verifyEmailOTP();
+    }
+  }
+
+  // Check if phone OTP is complete
+  function checkPhoneOTPComplete() {
+    let otp = '';
+    for (let i = 1; i <= 6; i++) {
+      otp += document.getElementById('phone-otp' + i).value;
+    }
+    
+    if (otp.length === 6) {
+      verifyPhoneOTP();
+    }
+  }
+
+  // Verify email OTP
+  function verifyEmailOTP() {
+    let enteredOTP = '';
+    for (let i = 1; i <= 6; i++) {
+      enteredOTP += document.getElementById('email-otp' + i).value;
+    }
+    
+    const otpError = document.getElementById('email-otp-error');
+    
+    if (enteredOTP.length !== 6) {
+      otpError.textContent = 'Please enter all 6 digits';
+      otpError.style.display = 'block';
+      return;
+    }
+    
+    if (enteredOTP === emailOTP) {
+      // Stop timer BEFORE replacing innerHTML to avoid null reference errors
+      clearInterval(emailOTPTimerInterval);
+      emailOTPTimerInterval = null;
+      emailVerified = true;
+      
+      // Success - show message
+      document.getElementById('email-otp-section').innerHTML = `
+        <div style="display:flex; align-items:center; gap:10px; padding:12px; background:rgba(107,143,113,0.1); border-radius:10px; border:1.5px solid var(--sage);">
+          <span style="font-size:20px;">✓</span>
+          <span style="font-size:14px; color:var(--sage); font-weight:600;">Email verified successfully!</span>
+        </div>`;
+    } else {
+      otpError.textContent = 'Invalid OTP. Please try again.';
+      otpError.style.display = 'block';
+      
+      // Clear OTP inputs
+      for (let i = 1; i <= 6; i++) {
+        document.getElementById('email-otp' + i).value = '';
+      }
+      document.getElementById('email-otp1').focus();
+    }
+  }
+
+  // Verify phone OTP
+  function verifyPhoneOTP() {
+    let enteredOTP = '';
+    for (let i = 1; i <= 6; i++) {
+      enteredOTP += document.getElementById('phone-otp' + i).value;
+    }
+    
+    const otpError = document.getElementById('phone-otp-error');
+    
+    if (enteredOTP.length !== 6) {
+      otpError.textContent = 'Please enter all 6 digits';
+      otpError.style.display = 'block';
+      return;
+    }
+    
+    if (enteredOTP === phoneOTP) {
+      // Stop timer BEFORE replacing innerHTML to avoid null reference errors
+      clearInterval(phoneOTPTimerInterval);
+      phoneOTPTimerInterval = null;
+      phoneVerified = true;
+      
+      // Success - show message
+      document.getElementById('phone-otp-section').innerHTML = `
+        <div style="display:flex; align-items:center; gap:10px; padding:12px; background:rgba(107,143,113,0.1); border-radius:10px; border:1.5px solid var(--sage);">
+          <span style="font-size:20px;">✓</span>
+          <span style="font-size:14px; color:var(--sage); font-weight:600;">Phone verified successfully!</span>
+        </div>`;
+    } else {
+      otpError.textContent = 'Invalid OTP. Please try again.';
+      otpError.style.display = 'block';
+      
+      // Clear OTP inputs
+      for (let i = 1; i <= 6; i++) {
+        document.getElementById('phone-otp' + i).value = '';
+      }
+      document.getElementById('phone-otp1').focus();
+    }
+  }
+
+  // Start email OTP timer
+  function startEmailOTPTimer() {
+    emailOTPTimeLeft = 60;
+    updateEmailOTPTimerDisplay();
+    
+    emailOTPTimerInterval = setInterval(() => {
+      emailOTPTimeLeft--;
+      updateEmailOTPTimerDisplay();
+      
+      if (emailOTPTimeLeft <= 0) {
+        clearInterval(emailOTPTimerInterval);
+        document.getElementById('email-otp-timer').innerHTML =
+          'OTP expired. <a href="#" onclick="resendEmailOTP(); return false;" style="color:var(--rust);">Resend</a>';
+      }
+    }, 1000);
+  }
+
+  // Start phone OTP timer
+  function startPhoneOTPTimer() {
+    phoneOTPTimeLeft = 60;
+    updatePhoneOTPTimerDisplay();
+    
+    phoneOTPTimerInterval = setInterval(() => {
+      phoneOTPTimeLeft--;
+      updatePhoneOTPTimerDisplay();
+      
+      if (phoneOTPTimeLeft <= 0) {
+        clearInterval(phoneOTPTimerInterval);
+        document.getElementById('phone-otp-timer').innerHTML =
+          'OTP expired. <a href="#" onclick="resendPhoneOTP(); return false;" style="color:var(--rust);">Resend</a>';
+      }
+    }, 1000);
+  }
+
+  // Update email OTP timer display
+  function updateEmailOTPTimerDisplay() {
+    const timerEl = document.getElementById('email-otp-timer');
+    if (!timerEl) { clearInterval(emailOTPTimerInterval); return; }
+    const minutes = Math.floor(emailOTPTimeLeft / 60);
+    const seconds = emailOTPTimeLeft % 60;
+    timerEl.textContent =
+      `OTP expires in ${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  // Update phone OTP timer display
+  function updatePhoneOTPTimerDisplay() {
+    const timerEl = document.getElementById('phone-otp-timer');
+    if (!timerEl) { clearInterval(phoneOTPTimerInterval); return; }
+    const minutes = Math.floor(phoneOTPTimeLeft / 60);
+    const seconds = phoneOTPTimeLeft % 60;
+    timerEl.textContent =
+      `OTP expires in ${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  // Resend email OTP
+  function resendEmailOTP() {
+    clearInterval(emailOTPTimerInterval);
+    
+    emailOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    console.log('New Email OTP:', emailOTP);
+    alert(`Your new Email OTP is: ${emailOTP}\n\n(In production, this would be sent via Email)`);
+    
+    // Clear OTP inputs
+    for (let i = 1; i <= 6; i++) {
+      document.getElementById('email-otp' + i).value = '';
+    }
+    document.getElementById('email-otp1').focus();
+    
+    // Restart timer
+    startEmailOTPTimer();
+    
+    // Hide error
+    document.getElementById('email-otp-error').style.display = 'none';
+  }
+
+  // Resend phone OTP
+  function resendPhoneOTP() {
+    clearInterval(phoneOTPTimerInterval);
+    
+    phoneOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    console.log('New Phone OTP:', phoneOTP);
+    alert(`Your new Phone OTP is: ${phoneOTP}\n\n(In production, this would be sent via SMS)`);
+    
+    // Clear OTP inputs
+    for (let i = 1; i <= 6; i++) {
+      document.getElementById('phone-otp' + i).value = '';
+    }
+    document.getElementById('phone-otp1').focus();
+    
+    // Restart timer
+    startPhoneOTPTimer();
+    
+    // Hide error
+    document.getElementById('phone-otp-error').style.display = 'none';
+  }
+
+  // CAPTCHA variables
+  let captchaFishCount = 0;
+  let captchaVerified = false;
+
+  // Generate CAPTCHA with fish images
+  function generateCaptcha() {
+    const captchaImage = document.getElementById('captcha-image');
+    const captchaAnswer = document.getElementById('captcha-answer');
+    const captchaError = document.getElementById('captcha-error');
+    const captchaSuccess = document.getElementById('captcha-success');
+    
+    // Reset state
+    captchaAnswer.value = '';
+    captchaError.style.display = 'none';
+    captchaSuccess.style.display = 'none';
+    captchaVerified = false;
+    
+    // Generate random number of fish (3-12)
+    captchaFishCount = Math.floor(Math.random() * 10) + 3;
+    
+    // Clear previous content
+    captchaImage.innerHTML = '';
+    
+    // Fish SVG template
+    const fishSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px; height:32px;">
+      <path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.46-3.44 6-7 6-3.56 0-7.56-2.54-8.5-6Z"/>
+      <path d="M18 12v.5"/>
+      <path d="M16 17.93a9.77 9.77 0 0 1 0-11.86"/>
+      <path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.23 5 .23 6.5C6.11 17.03 7 15 7 12.33"/>
+      <path d="M10.46 7.26C10.6 5.88 12.13 4 14.43 4c.96 0 1.84.32 2.57.87"/>
+      <path d="M10.46 16.74c.14 1.38 1.67 3.26 3.97 3.26.96 0 1.84-.32 2.57-.87"/>
+    </svg>`;
+    
+    // Add fish images with random positions and rotations
+    for (let i = 0; i < captchaFishCount; i++) {
+      const fish = document.createElement('div');
+      fish.innerHTML = fishSVG;
+      fish.style.position = 'absolute';
+      fish.style.left = `${Math.random() * 80 + 5}%`;
+      fish.style.top = `${Math.random() * 70 + 10}%`;
+      fish.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
+      fish.style.color = `hsl(${Math.random() * 60 + 180}, 70%, 50%)`;
+      fish.style.opacity = '0.9';
+      captchaImage.appendChild(fish);
+    }
+    
+    // Add some random bubbles for visual complexity
+    for (let i = 0; i < 8; i++) {
+      const bubble = document.createElement('div');
+      bubble.style.position = 'absolute';
+      bubble.style.left = `${Math.random() * 90 + 5}%`;
+      bubble.style.top = `${Math.random() * 80 + 10}%`;
+      bubble.style.width = `${Math.random() * 8 + 4}px`;
+      bubble.style.height = bubble.style.width;
+      bubble.style.borderRadius = '50%';
+      bubble.style.background = 'rgba(255,255,255,0.6)';
+      captchaImage.appendChild(bubble);
+    }
+  }
+
+  // Validate CAPTCHA
+  function validateCaptcha() {
+    const captchaAnswer = document.getElementById('captcha-answer');
+    const captchaError = document.getElementById('captcha-error');
+    const captchaSuccess = document.getElementById('captcha-success');
+    
+    if (captchaVerified) {
+      return true;
+    }
+    
+    const userAnswer = parseInt(captchaAnswer.value);
+    
+    if (isNaN(userAnswer)) {
+      captchaError.textContent = 'Please enter a number';
+      captchaError.style.display = 'block';
+      captchaSuccess.style.display = 'none';
+      return false;
+    }
+    
+    if (userAnswer === captchaFishCount) {
+      captchaError.style.display = 'none';
+      captchaSuccess.style.display = 'block';
+      captchaVerified = true;
+      return true;
+    } else {
+      captchaError.textContent = 'Incorrect count. Please try again.';
+      captchaError.style.display = 'block';
+      captchaSuccess.style.display = 'none';
+      generateCaptcha();
+      return false;
+    }
+  }
+
+  // Login submit
+  function handleLogin() {
+    const email = document.getElementById('login-email').value;
+    const error = document.getElementById('login-error');
+    
+    if (!email) {
+      error.textContent = 'Please enter your email or phone number';
+      error.style.display = 'block';
+      document.getElementById('login-email').style.borderColor = 'var(--rust)';
+      return;
+    }
+    
+    if (!isValidEmail(email) && !isValidPhone(email)) {
+      error.textContent = 'Please enter a valid email or 10-digit phone number';
+      error.style.display = 'block';
+      document.getElementById('login-email').style.borderColor = 'var(--rust)';
+      return;
+    }
+    
+    error.style.display = 'none';
+    const btn = event.target.closest('.btn-primary');
+    btn.innerHTML = '✓ Signing in…';
+    btn.style.background = 'var(--sage)';
+    setTimeout(() => {
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Sign In to RentLocally`;
+      btn.style.background = '';
+    }, 2000);
+  }
+
+  // OTP variables
+  let loginOTP = '';
+  let otpTimerInterval;
+  let otpTimeLeft = 60;
+
+  // Send OTP for login
+  function sendLoginOTP() {
+    const email = document.getElementById('login-email').value;
+    const error = document.getElementById('login-error');
+    
+    if (!email) {
+      error.textContent = 'Please enter your email or phone number';
+      error.style.display = 'block';
+      document.getElementById('login-email').style.borderColor = 'var(--rust)';
+      return;
+    }
+    
+    if (!isValidEmail(email) && !isValidPhone(email)) {
+      error.textContent = 'Please enter a valid email or 10-digit phone number';
+      error.style.display = 'block';
+      document.getElementById('login-email').style.borderColor = 'var(--rust)';
+      return;
+    }
+    
+    error.style.display = 'none';
+    
+    // Generate 6-digit OTP
+    loginOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // In production, send via SMS/Email API
+    console.log('Login OTP:', loginOTP);
+    alert(`Your OTP is: ${loginOTP}\n\n(In production, this would be sent via SMS/Email)`);
+    
+    // Show OTP section
+    document.getElementById('otp-section').style.display = 'block';
+    document.getElementById('otp-sent-to').textContent = email;
+    document.getElementById('send-otp-btn').style.display = 'none';
+    
+    // Start timer
+    startOTPTimer();
+    
+    // Focus first OTP input
+    document.getElementById('otp1').focus();
+  }
+
+  // Handle OTP input
+  function handleOTPInput(input, position) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+    
+    if (input.value.length === 1 && position < 6) {
+      document.getElementById('otp' + (position + 1)).focus();
+    }
+    
+    checkLoginOTPComplete();
+  }
+
+  // Handle OTP keydown
+  function handleOTPKeydown(event, position) {
+    if (event.key === 'Backspace' && position > 1) {
+      const currentInput = document.getElementById('otp' + position);
+      if (currentInput.value === '') {
+        document.getElementById('otp' + (position - 1)).focus();
+      }
+    }
+  }
+
+  // Check if OTP is complete
+  function checkLoginOTPComplete() {
+    let otp = '';
+    for (let i = 1; i <= 6; i++) {
+      otp += document.getElementById('otp' + i).value;
+    }
+    
+    if (otp.length === 6) {
+      verifyLoginOTP();
+    }
+  }
+
+  // Verify OTP
+  function verifyLoginOTP() {
+    let enteredOTP = '';
+    for (let i = 1; i <= 6; i++) {
+      enteredOTP += document.getElementById('otp' + i).value;
+    }
+    
+    const otpError = document.getElementById('otp-error');
+    
+    if (enteredOTP.length !== 6) {
+      otpError.textContent = 'Please enter all 6 digits';
+      otpError.style.display = 'block';
+      return;
+    }
+    
+    if (enteredOTP === loginOTP) {
+      otpError.style.display = 'none';
+      clearInterval(otpTimerInterval);
+      
+      // Success - show message and redirect
+      const btn = event.target.closest('.btn-primary');
+      btn.innerHTML = '✓ Verified! Signing in…';
+      btn.style.background = 'var(--sage)';
+      
+      setTimeout(() => {
+        alert('Login successful! Redirecting to dashboard...');
+        // In production, redirect to dashboard
+      }, 1500);
+    } else {
+      otpError.textContent = 'Invalid OTP. Please try again.';
+      otpError.style.display = 'block';
+      
+      // Clear OTP inputs
+      for (let i = 1; i <= 6; i++) {
+        document.getElementById('otp' + i).value = '';
+      }
+      document.getElementById('otp1').focus();
+    }
+  }
+
+  // Start OTP timer
+  function startOTPTimer() {
+    otpTimeLeft = 60;
+    updateOTPTimerDisplay();
+    
+    otpTimerInterval = setInterval(() => {
+      otpTimeLeft--;
+      updateOTPTimerDisplay();
+      
+      if (otpTimeLeft <= 0) {
+        clearInterval(otpTimerInterval);
+        document.getElementById('otp-timer').innerHTML =
+          'OTP expired. <a href="#" onclick="resendLoginOTP(); return false;" style="color:var(--rust);">Resend</a>';
+      }
+    }, 1000);
+  }
+
+  // Update OTP timer display
+  function updateOTPTimerDisplay() {
+    const minutes = Math.floor(otpTimeLeft / 60);
+    const seconds = otpTimeLeft % 60;
+    document.getElementById('otp-timer').textContent =
+      `OTP expires in ${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  // Resend OTP
+  function resendLoginOTP() {
+    clearInterval(otpTimerInterval);
+    
+    loginOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    console.log('New Login OTP:', loginOTP);
+    alert(`Your new OTP is: ${loginOTP}\n\n(In production, this would be sent via SMS/Email)`);
+    
+    // Clear OTP inputs
+    for (let i = 1; i <= 6; i++) {
+      document.getElementById('otp' + i).value = '';
+    }
+    document.getElementById('otp1').focus();
+    
+    // Restart timer
+    startOTPTimer();
+    
+    // Hide error
+    document.getElementById('otp-error').style.display = 'none';
+  }
+
+  // Photo preview function
+  function previewPhoto(input) {
+    const preview = document.getElementById('photo-preview');
+    const file = input.files[0];
+    
+    if (file) {
+      // Check file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert('File size must be less than 2MB');
+        input.value = '';
+        return;
+      }
+      
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        input.value = '';
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Register submit
+  function handleRegister() {
+    const agreed = document.getElementById('agree-terms').checked;
+    if (!agreed) { alert('Please agree to the Terms & Privacy Policy.'); return; }
+    const btn = event.target.closest('.btn-primary');
+    btn.innerHTML = '✓ Creating account…';
+    btn.style.background = 'var(--sage)';
+    setTimeout(() => {
+      document.getElementById('reg-step-3').innerHTML = `
+        <div style="text-align:center;padding:32px 0;">
+          <div style="width:72px;height:72px;background:rgba(107,143,113,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;">✓</div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:24px;color:var(--ink);margin-bottom:10px;">You're all set!</h2>
+          <p style="font-size:14px;color:var(--warm-gray);line-height:1.7;max-width:300px;margin:0 auto 24px;">Your account is under review. We'll verify your documents within 24 hours and email you once approved.</p>
+          <button class="btn-primary" style="max-width:220px;margin:0 auto;" onclick="switchTab('login')">Go to Sign In</button>
+        </div>`;
+    }, 2000);
+  }
+</script>
+
+<style>
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#live-gps-section {
+  margin-bottom: 24px;
+}
+</style>
+</body>
+</html>

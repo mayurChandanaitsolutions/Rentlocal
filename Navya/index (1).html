@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RentLocally — Customer Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="brand">
+    <div class="brand-icon">🏠</div>
+    <div class="brand-name">Rent<span>Locally</span></div>
+  </div>
+
+  <div class="left-content">
+    <h1 class="left-tagline">Your one-stop<br><em>Local</em> rentalplace,<br>for everything.</h1>
+    <p class="left-sub">We provide a wide range of reliable and high-quality services to meet your residential and business needs. From home maintenance to advanced IT solutions, our skilled professionals ensure efficient, safe, and timely service every time.
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <span class="feature-text">Verified local service providers</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <span class="feature-text">Instant booking & scheduling</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <span class="feature-text">Secure messaging & document sharing</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <span class="feature-text">Local insights & trusted review</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative SVG skyline -->
+  <svg class="skyline" viewBox="0 0 500 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="60" width="30" height="60" fill="white"/>
+    <rect x="15" y="40" width="20" height="60" fill="white"/>
+    <rect x="50" y="70" width="25" height="50" fill="white"/>
+    <rect x="85" y="30" width="40" height="90" fill="white"/>
+    <rect x="90" y="10" width="30" height="90" fill="white"/>
+    <rect x="135" y="55" width="35" height="65" fill="white"/>
+    <rect x="180" y="40" width="20" height="80" fill="white"/>
+    <rect x="185" y="20" width="10" height="80" fill="white"/>
+    <rect x="210" y="65" width="30" height="55" fill="white"/>
+    <rect x="250" y="35" width="45" height="85" fill="white"/>
+    <rect x="255" y="15" width="35" height="85" fill="white"/>
+    <rect x="305" y="50" width="28" height="70" fill="white"/>
+    <rect x="343" y="70" width="22" height="50" fill="white"/>
+    <rect x="375" y="25" width="50" height="95" fill="white"/>
+    <rect x="380" y="5" width="40" height="95" fill="white"/>
+    <rect x="435" y="55" width="30" height="65" fill="white"/>
+    <rect x="475" y="45" width="25" height="75" fill="white"/>
+  </svg>
+
+  <div class="left-footer">© 2026 RentLocally Inc. All rights reserved.</div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="auth-card">
+
+    <!-- TABS -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="form-panel active" id="login-panel">
+      <p class="form-subtitle">Access your account to manage rentals and saved listings.</p>
+
+      <div class="field-group">
+        <div class="field">
+          <label>Email or Phone Number</label>
+          <div class="input-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+            <input type="text" id="login-email" placeholder="you@example.com or 9876543210" autocomplete="email" oninput="validateLoginInput()">
+          </div>
+          <p class="error-message" id="login-error" style="color:#f44336;font-size:12px;margin-top:6px;display:none;">Please enter a valid email or 10-digit phone number</p>
+        </div>
+      </div>
+
+      <!-- Fish Counting CAPTCHA -->
+      <div class="field" id="captcha-section" style="margin-bottom:20px;">
+        <label>Security Check</label>
+        <div style="background:var(--white); border:1.5px solid var(--light-gray); border-radius:12px; padding:16px; text-align:center;">
+          <p style="font-size:13px; color:var(--ink); margin-bottom:12px;">Count the number of fish in the image below:</p>
+          <div id="captcha-image" style="width:100%; height:150px; background:linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px; padding:10px; position:relative; overflow:hidden;">
+          </div>
+          <div style="display:flex; gap:10px; margin-top:12px; align-items:center; justify-content:center;">
+            <input type="number" id="captcha-answer" placeholder="Enter count" min="0" max="20" style="width:100px; padding:10px; border:1.5px solid var(--light-gray); border-radius:8px; font-size:14px; text-align:center;">
+            <button type="button" class="btn-secondary" style="padding:10px 16px; font-size:13px;" onclick="generateCaptcha()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Refresh
+            </button>
+          </div>
+          <p id="captcha-error" style="color:#f44336; font-size:12px; margin-top:8px; display:none;">Incorrect count. Please try again.</p>
+          <p id="captcha-success" style="color:var(--sage); font-size:12px; margin-top:8px; display:none;">✓ Verified!</p>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="send-otp-btn" onclick="if(validateCaptcha()) sendLoginOTP()" style="margin-bottom:16px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.44 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.08 6.08l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Send OTP
+      </button>
+
+      <div id="otp-section" style="display:none; margin-bottom:24px;">
+        <div style="text-align:center; margin-bottom:16px;">
+          <p style="font-size:14px; color:var(--ink); margin-bottom:8px;">Enter the 6-digit OTP sent to</p>
+          <p id="otp-sent-to" style="font-size:14px; color:var(--rust); font-weight:600;"></p>
+        </div>
+
+        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px;">
+          <input type="tel" class="otp-input" maxlength="1" id="otp1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleOTPInput(this, 1)" onkeydown="handleOTPKeydown(event, 1)" onbeforeinput="handleOTPBeforeInput(event)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+          <input type="tel" class="otp-input" maxlength="1" id="otp2" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleOTPInput(this, 2)" onkeydown="handleOTPKeydown(event, 2)" onbeforeinput="handleOTPBeforeInput(event)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+          <input type="tel" class="otp-input" maxlength="1" id="otp3" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleOTPInput(this, 3)" onkeydown="handleOTPKeydown(event, 3)" onbeforeinput="handleOTPBeforeInput(event)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+          <input type="tel" class="otp-input" maxlength="1" id="otp4" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleOTPInput(this, 4)" onkeydown="handleOTPKeydown(event, 4)" onbeforeinput="handleOTPBeforeInput(event)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+          <input type="tel" class="otp-input" maxlength="1" id="otp5" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleOTPInput(this, 5)" onkeydown="handleOTPKeydown(event, 5)" onbeforeinput="handleOTPBeforeInput(event)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+          <input type="tel" class="otp-input" maxlength="1" id="otp6" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleOTPInput(this, 6)" onkeydown="handleOTPKeydown(event, 6)" onbeforeinput="handleOTPBeforeInput(event)" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+        </div>
+
+        <p id="otp-error" style="color:#f44336; font-size:12px; text-align:center; margin-bottom:12px; display:none;">Invalid OTP. Please try again.</p>
+
+        <div style="text-align:center; margin-bottom:16px;">
+          <p id="otp-timer" style="font-size:13px; color:var(--warm-gray);"></p>
+        </div>
+
+        <button class="btn-primary" onclick="verifyLoginOTP()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Verify OTP
+        </button>
+
+        <div style="text-align:center; margin-top:12px;">
+          <a href="#" onclick="resendLoginOTP(); return false;" style="color:var(--rust); font-size:13px; text-decoration:none; font-weight:500;">Resend OTP</a>
+        </div>
+      </div>
+
+      <div class="check-row" style="margin-bottom:24px; margin-top:14px;">
+        <input type="checkbox" id="remember">
+        <label for="remember">Keep me signed in</label>
+      </div>
+
+      <p class="terms-text">
+        By signing in, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+      </p>
+    </div>
+
+    <!-- REGISTER FORM — multi-step -->
+    <div class="form-panel" id="register-panel">
+
+      <!-- STEP 1: Account Details -->
+      <div id="reg-step-1">
+        <h2 class="form-title">Create account</h2>
+        <p class="form-subtitle">Step 1 of 3 — Your basic details.</p>
+
+        <!-- Stepper -->
+        <div class="stepper">
+          <div class="step active" id="s1"><div class="step-circle">1</div><div class="step-label">Account</div></div>
+          <div class="step" id="s2"><div class="step-circle">2</div><div class="step-label">Documents</div></div>
+          <div class="step" id="s3"><div class="step-circle">3</div><div class="step-label">Review</div></div>
+        </div>
+
+        <div class="field-group">
+<div class="field">
+  <label>Profile Photo</label>
+  <div class="doc-upload-card" id="card-profile">
+    <input type="file" id="profile-input" accept="image/jpeg,image/png,image/jpg" onchange="markUploaded('card-profile','status-profile',this); previewProfilePhoto(this);">
+    <div class="doc-icon">👤</div>
+    <div class="doc-info">
+      <div class="doc-name">Profile Photo</div>
+      <div class="doc-hint">Recent photo · Max 2MB · JPG/PNG</div>
+    </div>
+    <div class="doc-status" id="status-profile">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      Upload
+    </div>
+    <div id="profile-preview" class="profile-preview" style="position:absolute;top:8px;right:8px;width:48px;height:48px;border-radius:50%;background:var(--light-gray);overflow:hidden;display:none;border:2px solid var(--white);box-shadow:0 2px 8px var(--shadow);">
+    </div>
+  </div>
+</div>
+          <div class="field-row">
+            <div class="field">
+              <label>First Name</label>
+              <div class="input-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" id="r-fname" placeholder="Aarav" autocomplete="given-name">
+              </div>
+            </div>
+            <div class="field">
+              <label>Last Name</label>
+              <div class="input-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" id="r-lname" placeholder="Sharma" autocomplete="family-name">
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Email Address</label>
+            <div class="input-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+              <input type="email" id="r-email" placeholder="you@example.com" autocomplete="email" oninput="validateRegisterEmail()">
+            </div>
+            <p class="error-message" id="r-email-error" style="color:#f44336;font-size:12px;margin-top:6px;display:none;">Please enter a valid email address</p>
+            <button type="button" class="btn-secondary" style="margin-top:8px; padding:10px 16px; font-size:13px;" onclick="sendEmailOTP()" id="send-email-otp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+              Send Email OTP
+            </button>
+          </div>
+          <div class="field">
+            <label>Phone Number</label>
+            <div class="input-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.44 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.08 6.08l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <input type="tel" id="r-phone" placeholder="+91 98765 43210" autocomplete="tel" oninput="validateRegisterPhone()">
+            </div>
+            <p class="error-message" id="r-phone-error" style="color:#f44336;font-size:12px;margin-top:6px;display:none;">Please enter a valid 10-digit phone number</p>
+            <button type="button" class="btn-secondary" style="margin-top:8px; padding:10px 16px; font-size:13px;" onclick="sendPhoneOTP()" id="send-phone-otp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.44 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.08 6.08l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              Send Phone OTP
+            </button>
+          </div>
+          
+          <!-- Email OTP Verification -->
+          <div class="field" id="email-otp-section" style="display:none;">
+            <label>Email Verification</label>
+            <div style="display:flex; gap:8px; margin-bottom:10px; justify-content:space-between;">
+              <input type="tel" class="otp-input" maxlength="1" id="email-otp1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleEmailOTPInput(this, 1)" onkeydown="handleEmailOTPKeydown(event, 1)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="tel" class="otp-input" maxlength="1" id="email-otp2" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleEmailOTPInput(this, 2)" onkeydown="handleEmailOTPKeydown(event, 2)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="tel" class="otp-input" maxlength="1" id="email-otp3" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleEmailOTPInput(this, 3)" onkeydown="handleEmailOTPKeydown(event, 3)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="tel" class="otp-input" maxlength="1" id="email-otp4" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleEmailOTPInput(this, 4)" onkeydown="handleEmailOTPKeydown(event, 4)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="tel" class="otp-input" maxlength="1" id="email-otp5" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleEmailOTPInput(this, 5)" onkeydown="handleEmailOTPKeydown(event, 5)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="tel" class="otp-input" maxlength="1" id="email-otp6" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleEmailOTPInput(this, 6)" onkeydown="handleEmailOTPKeydown(event, 6)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+            </div>
+            <p id="email-otp-error" style="color:#f44336; font-size:12px; margin-bottom:8px; display:none;">Invalid OTP. Please try again.</p>
+            <p id="email-otp-timer" style="font-size:12px; color:var(--warm-gray); margin-bottom:8px;"></p>
+            <div style="display:flex; gap:10px;">
+              <button type="button" class="btn-secondary" style="flex:1; padding:10px;" onclick="verifyEmailOTP()">Verify Email OTP</button>
+              <a href="#" onclick="resendEmailOTP(); return false;" style="color:var(--rust); font-size:12px; text-decoration:none; font-weight:500; padding:10px;">Resend</a>
+            </div>
+          </div>
+          
+          <!-- Phone OTP Verification -->
+          <div class="field" id="phone-otp-section" style="display:none;">
+            <label>Phone Verification</label>
+            <div style="display:flex; gap:8px; margin-bottom:10px; justify-content:space-between;">
+              <input type="tel" class="otp-input" maxlength="1" id="phone-otp1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handlePhoneOTPInput(this, 1)" onkeydown="handlePhoneOTPKeydown(event, 1)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="tel" class="otp-input" maxlength="1" id="phone-otp2" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handlePhoneOTPInput(this, 2)" onkeydown="handlePhoneOTPKeydown(event, 2)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="tel" class="otp-input" maxlength="1" id="phone-otp3" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handlePhoneOTPInput(this, 3)" onkeydown="handlePhoneOTPKeydown(event, 3)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="tel" class="otp-input" maxlength="1" id="phone-otp4" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handlePhoneOTPInput(this, 4)" onkeydown="handlePhoneOTPKeydown(event, 4)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="tel" class="otp-input" maxlength="1" id="phone-otp5" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handlePhoneOTPInput(this, 5)" onkeydown="handlePhoneOTPKeydown(event, 5)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+              <input type="tel" class="otp-input" maxlength="1" id="phone-otp6" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handlePhoneOTPInput(this, 6)" onkeydown="handlePhoneOTPKeydown(event, 6)" onbeforeinput="handleOTPBeforeInput(event)" style="flex:1; min-width:0; height:50px; text-align:center; font-size:20px; font-weight:600; border:2px solid var(--light-gray); border-radius:10px; outline:none; background:var(--white); color:var(--ink); caret-color:var(--rust);">
+            </div>
+            <p id="phone-otp-error" style="color:#f44336; font-size:12px; margin-bottom:8px; display:none;">Invalid OTP. Please try again.</p>
+            <p id="phone-otp-timer" style="font-size:12px; color:var(--warm-gray); margin-bottom:8px;"></p>
+            <div style="display:flex; gap:10px;">
+              <button type="button" class="btn-secondary" style="flex:1; padding:10px;" onclick="verifyPhoneOTP()">Verify Phone OTP</button>
+              <a href="#" onclick="resendPhoneOTP(); return false;" style="color:var(--rust); font-size:12px; text-decoration:none; font-weight:500; padding:10px;">Resend</a>
+            </div>
+          </div>
+          
+          <!-- Live GPS Location -->
+          <div class="field" id="live-gps-section">
+            <label style="font-size:12px;">📍 Live Location <span id="gps-status" style="font-size:11px;color:var(--warm-gray);">Detecting...</span></label>
+            <div style="background:var(--white);border:1.5px solid var(--light-gray);border-radius:12px;padding:16px;position:relative;">
+              <div id="gps-loading" style="display:flex;align-items:center;gap:8px;color:var(--sage);font-size:13px;">
+                <div style="width:16px;height:16px;border:2px solid var(--light-gray);border-top:2px solid var(--sage);border-radius:50%;animation:spin 1s linear infinite;"></div>
+                Getting your current location...
+              </div>
+              <div id="gps-display" style="display:none;">
+                <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:6px;" id="gps-address"></div>
+                <div style="font-size:12px;color:var(--warm-gray);font-family:monospace;letter-spacing:0.3px;" id="gps-coords"></div>
+                <div id="gps-updated" style="font-size:11px;color:var(--sage);margin-top:8px;">Updated just now</div>
+              </div>
+              <div id="gps-error" style="display:none;color:#f44336;font-size:12px;padding:8px 0;"></div>
+            </div>
+          </div>
+          
+          <div class="field">
+            <label>Permanent Address</label>
+            <div class="field-row" style="margin-bottom:10px;">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">House/Flat No.</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-house" placeholder="123, ABC Apartments">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">Area/Locality</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-area" placeholder="Koramangala">
+                </div>
+              </div>
+            </div>
+            <div class="field-row" style="margin-bottom:10px;">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">City</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-city" placeholder="Bengaluru">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">District</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-district" placeholder="Bengaluru Urban">
+                </div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">State</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-state" placeholder="Karnataka">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">Pincode</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-perm-pincode" placeholder="560034" maxlength="6">
+                </div>
+              </div>
+            </div>
+            </div>
+            
+            <!-- Country Selection -->
+            <div class="field">
+              <label>Country</label>
+              <div class="input-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 21v-8m0 0V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6m-11 3v4m0 0h6m-6 0h6"/>
+                </svg>
+                <select id="r-country" onchange="toggleCountryPassport();">
+
+                  <option value="India">India 🇮🇳</option>
+                  <option value="USA">United States 🇺🇸</option>
+                  <option value="United Kingdom">United Kingdom 🇬🇧</option>
+                  <option value="Canada">Canada 🇨🇦</option>
+                  <option value="Australia">Australia 🇦🇺</option>
+                  <option value="UAE">UAE 🇦🇪</option>
+                  <option value="Singapore">Singapore 🇸🇬</option>
+                  <option value="Germany">Germany 🇩🇪</option>
+                  <option value="France">France 🇫🇷</option>
+                  <option value="Netherlands">Netherlands 🇳🇱</option>
+                  <optgroup label="Others">
+                    <option value="Other">Other Countries</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+            
+            <div class="field">
+              <label>Temporary Address</label>
+            <div class="field-row" style="margin-bottom:10px;">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">House/Flat No.</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-house" placeholder="456, XYZ Residency">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">Area/Locality</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-area" placeholder="Indiranagar">
+                </div>
+              </div>
+            </div>
+            <div class="field-row" style="margin-bottom:10px;">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">City</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-city" placeholder="Bengaluru">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">District</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-district" placeholder="Bengaluru Urban">
+                </div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">State</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-state" placeholder="Karnataka">
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:11px; text-transform:none; letter-spacing:0;">Pincode</label>
+                <div class="input-wrap">
+                  <input type="text" id="r-temp-pincode" placeholder="560038" maxlength="6">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="if(validateStep1()) goStep(2)" style="margin-top:8px;">
+          Continue to Documents
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+      <!-- STEP 2: Document Upload -->
+      <div id="reg-step-2" style="display:none;">
+        <h2 class="form-title">Secure your rental</h2>
+        <p class="form-subtitle">Upload key documents to build trust with landlords. You can skip optional ones later.</p>
+
+        <div class="stepper">
+          <div class="step done"><div class="step-circle">✓</div><div class="step-label">Account</div></div>
+          <div class="step active"><div class="step-circle">2</div><div class="step-label">Documents</div></div>
+          <div class="step"><div class="step-circle">3</div><div class="step-label">Done</div></div>
+        </div>
+
+        <!-- Scrollable doc area -->
+<div style="max-height:65vh;overflow-y:auto;padding-right:12px;scrollbar-width:thin;scrollbar-color:var(--warm-gray) transparent;scroll-behavior:smooth;">
+
+          <!-- Identity -->
+          <div class="doc-section-title">Identity Proof <span class="doc-required-badge">Required</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-aadhaar">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-aadhaar','status-aadhaar',this)">
+              <div class="doc-icon">🪪</div>
+              <div class="doc-info"><div class="doc-name">Aadhaar Card</div><div class="doc-hint">Front & back · PDF or image · Max 5MB</div></div>
+              <div class="doc-status" id="status-aadhaar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-pan">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-pan','status-pan',this)">
+              <div class="doc-icon">💳</div>
+              <div class="doc-info"><div class="doc-name">PAN Card</div><div class="doc-hint">Clear scan · PDF or image · Max 5MB</div></div>
+              <div class="doc-status" id="status-pan"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div id="passport-container" style="display: none;">
+              <div class="doc-upload-card" id="card-passport">
+                <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-passport','status-passport',this); checkPassportRequired()">
+                <div class="doc-icon">📘</div>
+                <div class="doc-info">
+                  <div class="doc-name">Passport / NRI ID <span id="passport-badge" class="doc-required-badge" style="display: inline-block; margin-left: 6px;">Required</span></div>
+                  <div class="doc-hint">Required for non-Indian citizens & NRIs · First & last page</div>
+                </div>
+                <div class="doc-status" id="status-passport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="doc-section-title">Address Proof <span class="doc-required-badge">Required · Any 1</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-utility">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-utility','status-utility',this)">
+              <div class="doc-icon">🧾</div>
+              <div class="doc-info"><div class="doc-name">Utility Bill</div><div class="doc-hint">Electricity / Gas / Water — last 3 months</div></div>
+              <div class="doc-status" id="status-utility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-voterид">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-voterid','status-voterid',this)">
+              <div class="doc-icon">🗳️</div>
+              <div class="doc-info"><div class="doc-name">Voter ID</div><div class="doc-hint">Front & back · Government issued</div></div>
+              <div class="doc-status" id="status-voterid"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+          </div>
+
+           <!-- Employment -->
+           <div class="doc-section-title">Employment</div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-empid">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-empid','status-empid',this)">
+              <div class="doc-icon">🏢</div>
+              <div class="doc-info"><div class="doc-name">Employee ID / Offer Letter</div><div class="doc-hint">Confirms current employer & stability</div></div>
+              <div class="doc-status" id="status-empid"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+          </div>
+
+          <!-- Financial -->
+          <div class="doc-section-title">Financial Proof <span class="doc-required-badge">Required · Any 1</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-salary">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-salary','status-salary',this)">
+              <div class="doc-icon">💼</div>
+              <div class="doc-info"><div class="doc-name">Salary Slips</div><div class="doc-hint">Last 3 months · PDF preferred</div></div>
+              <div class="doc-status" id="status-salary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-bank">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-bank','status-bank',this)">
+              <div class="doc-icon">🏦</div>
+              <div class="doc-info"><div class="doc-name">Bank Statement</div><div class="doc-hint">Last 6 months · Shows financial stability</div></div>
+              <div class="doc-status" id="status-bank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-itr">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-itr','status-itr',this)">
+              <div class="doc-icon">📄</div>
+              <div class="doc-info"><div class="doc-name">ITR / Form 16</div><div class="doc-hint">Latest filing · For self-employed tenants</div></div>
+              <div class="doc-status" id="status-itr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+          </div>
+
+           <!-- Legal & References -->
+          <div class="doc-section-title">Legal & References <span class="doc-optional-badge">Optional</span></div>
+          <div class="doc-grid">
+            <div class="doc-upload-card" id="card-police">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-police','status-police',this)">
+              <div class="doc-icon">🚔</div>
+              <div class="doc-info"><div class="doc-name">Police Verification Form</div><div class="doc-hint">Required by law in many states</div></div>
+              <div class="doc-status" id="status-police"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-noc">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-noc','status-noc',this)">
+              <div class="doc-icon">📃</div>
+              <div class="doc-info"><div class="doc-name">Previous Landlord NOC</div><div class="doc-hint">Confirms good rental history</div></div>
+              <div class="doc-status" id="status-noc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+            <div class="doc-upload-card" id="card-agreement">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markUploaded('card-agreement','status-agreement',this)">
+              <div class="doc-icon">📝</div>
+              <div class="doc-info"><div class="doc-name">Signed Rent Agreement</div><div class="doc-hint">Previous tenancy · Notarised copy preferred</div></div>
+              <div class="doc-status" id="status-agreement"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</div>
+            </div>
+          </div>
+
+        </div><!-- end scrollable -->
+
+        </div><!-- end scrollable -->
+
+        <div class="doc-notice" style="margin-top:14px;">
+          🔒 <strong>Your documents are safe.</strong> AES-256 encrypted. Shared with landlords only after your approval. Compliant with India's DPDP Act 2023.
+        </div>
+
+        <div class="step-nav" style="margin-top:16px;">
+          <button class="btn-secondary" onclick="goStep(1)">← Back</button>
+          <button class="btn-primary" style="flex:2;" onclick="if(validateStep2()) goStep(3);">
+            Review & Submit
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+        <p style="text-align:center;margin-top:12px;"><a href="#" onclick="goStep(3);return false;" style="font-size:13px;color:var(--warm-gray);text-decoration:underline;">Skip for now — upload after signup</a></p>
+      </div>
+
+      <!-- STEP 3: Review & Confirm -->
+      <div id="reg-step-3" style="display:none;">
+        <h2 class="form-title">Almost there!</h2>
+        <p class="form-subtitle">Step 3 of 3 — Review your submission.</p>
+
+        <div class="stepper">
+          <div class="step done"><div class="step-circle">✓</div><div class="step-label">Account</div></div>
+          <div class="step done"><div class="step-circle">✓</div><div class="step-label">Documents</div></div>
+          <div class="step active"><div class="step-circle">3</div><div class="step-label">Review</div></div>
+        </div>
+
+        <!-- Summary -->
+        <div style="background:var(--white);border-radius:12px;border:1.5px solid var(--light-gray);padding:18px 20px;margin-bottom:20px;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:14px;">Account Summary</div>
+          <div style="font-size:14px;color:var(--ink);display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--warm-gray);">Name</span><span id="review-name" style="font-weight:500;">—</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--warm-gray);">Email</span><span id="review-email" style="font-weight:500;">—</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--warm-gray);">Phone</span><span id="review-phone" style="font-weight:500;">—</span></div>
+          </div>
+        </div>
+
+        <div style="background:var(--white);border-radius:12px;border:1.5px solid var(--light-gray);padding:18px 20px;margin-bottom:20px;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:14px;">Documents Uploaded</div>
+          <div id="review-docs" style="font-size:13px;color:var(--ink);display:flex;flex-direction:column;gap:7px;"></div>
+        </div>
+
+        <div class="check-row" style="margin-bottom:20px;">
+          <input type="checkbox" id="agree-terms">
+          <label for="agree-terms">I agree to the <a href="#" style="color:var(--rust);font-weight:500;">Terms</a>, <a href="#" style="color:var(--rust);font-weight:500;">Privacy Policy</a> &amp; document sharing consent</label>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn-secondary" onclick="goStep(2)">← Back</button>
+          <button class="btn-primary" style="flex:2;" onclick="handleRegister()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Create My Account
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+
+  <script src="script.js"></script>
+</body>
+</html>
